@@ -26,10 +26,11 @@ trait OrderBy
     {
         $duplicates = [];
         foreach ($this->orderBy as $identifier => $direction) {
+            // non relations
             if (FALSE === \strpos($identifier, '__')) {
                 if (! $this->content->hasProperty($identifier)) {
                     LoggerManager::get()->warning(\sprintf(
-                        "Invalid order by expression %s: Type %s has no property %s",
+                        "Invalid order by expression %s: Content %s has no property %s",
                         $identifier,
                         $this->content->getSchemaIdentifier(),
                         $identifier
@@ -52,6 +53,7 @@ trait OrderBy
                 continue;
             }
 
+            // relations
             $this->orderRelation($this->content, $queryBuilder, $identifier, $direction, $duplicates);
         }
     }

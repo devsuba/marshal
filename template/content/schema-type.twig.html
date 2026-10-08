@@ -1,0 +1,16 @@
+{% extends "main::layout" %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb breadcrumb-arrow">
+    <li class="breadcrumb-item"><a href="{{ path('marshal::home') }}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{{ path('marshal::content-dashboard') }}">Content</a></li>
+</ol>
+{% endblock %}
+
+{% block main %}
+<main class="container-lg">
+    <div class="section">
+        {{ dump(collection) }}
+    </div>
+</main>
+{% endblock %}

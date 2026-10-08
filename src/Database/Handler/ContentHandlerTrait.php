@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Marshal\Database\Handler;
 
+use Marshal\Utils\Config;
+
 trait ContentHandlerTrait
 {
-    private function getSelectedSchemaType(string $type, array $schemaConfig): ?string
+    private function getSelectedSchemaType(string $type): ?string
     {
-        foreach ($schemaConfig['types'] as $identifier => $config) {
+        $schemaConfig = Config::get('schema');
+        foreach ($schemaConfig['types'] ?? [] as $identifier => $config) {
             if (! isset($config['tag'])) {
                 continue;
             }
@@ -23,9 +26,10 @@ trait ContentHandlerTrait
         return null;
     }
 
-    private function getSchemaConfig(string $schema, array $databaseConfig): array
+    private function getSchemaConfig(string $schema): array
     {
-        foreach ($databaseConfig as $dbConfig) {
+        $databaseConfig = Config::get('database');
+        foreach ($databaseConfig ?? [] as $dbConfig) {
             if (! isset($dbConfig['tag'])) {
                 continue;
             }
@@ -40,9 +44,10 @@ trait ContentHandlerTrait
         return [];
     }
 
-    private function getSchemaName(string $schema, array $databaseConfig): ?string
+    private function getSchemaName(string $schema): ?string
     {
-        foreach ($databaseConfig as $dbName => $dbConfig) {
+        $databaseConfig = Config::get('database');
+        foreach ($databaseConfig ?? [] as $dbName => $dbConfig) {
             if (! isset($dbConfig['tag'])) {
                 continue;
             }

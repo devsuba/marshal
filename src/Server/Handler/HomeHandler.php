@@ -19,6 +19,14 @@ final class HomeHandler implements RequestHandlerInterface
         $platform = $request->getAttribute(PlatformInterface::class);
         \assert($platform instanceof PlatformInterface);
 
-        return $platform->formatResponse($request, template: self::TEMPLATE_HOME);
+        return $platform->streamResponse("marshal::home-alternate", [
+            'title' => "Marshal Home",
+        ]);
+
+        // return $platform->formatResponse($request, [
+        //     "signals" => [
+        //         "title" => "Marshal Home"
+        //     ],
+        // ], template: "marshal::home-alternate");
     }
 }

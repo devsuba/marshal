@@ -26,7 +26,7 @@ class Content
     {
     }
 
-    public function __tostring(): string
+    public function __toString(): string
     {
         return (string) $this->getId();
     }
@@ -89,7 +89,7 @@ class Content
         }
 
         throw new \InvalidArgumentException(
-            \sprintf("Property %s does not exist in type: %s", $identifier, $this->getSchemaIdentifier())
+            \sprintf("Property %s does not exist in content: %s", $identifier, $this->getSchemaIdentifier())
         );
     }
 

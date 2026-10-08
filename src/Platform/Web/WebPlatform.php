@@ -8,10 +8,9 @@ use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
-use loophp\collection\Collection;
-use Marshal\Database\Schema\Content;
 use Marshal\Platform\PlatformInterface;
 use Marshal\Platform\Web\TemplateRenderer\TemplateRendererResolverInterface;
+use Marshal\Server\Response\SseEvent;
 use Marshal\Server\Response\SseResponse;
 use Marshal\Utils\Config;
 use Psr\Http\Message\ResponseInterface;
@@ -57,14 +56,11 @@ class WebPlatform implements PlatformInterface
         array $headers = [],
         array $options = []
     ): ResponseInterface {
-        // normalize the data
-        $normalized = $this->normalizeData($data);
-
         // for when a template is given
         if (null !== $template) {
             $renderer = $this->templateRendererResolver->resolve($template);
-            $html = $renderer->render($template, $normalized, $options);
-            
+            $html = $renderer->render($template, $data, $options);
+
             return $this->isJsonRequest($request)
                 ? new JsonResponse(['contents' => $html], $status, $headers)
                 : new HtmlResponse($html, $status, $headers);
@@ -75,7 +71,7 @@ class WebPlatform implements PlatformInterface
             : JsonResponse::DEFAULT_JSON_FLAGS;
 
         return new JsonResponse(
-            $normalized,
+            $data,
             $status,
             $headers,
             $encodingOptions
@@ -106,7 +102,7 @@ class WebPlatform implements PlatformInterface
     ): ResponseInterface {
         return new JsonResponse($data, $status, $headers, $encodingOptions);
     }
-    
+
     public function notFoundResponse(
         ServerRequestInterface $request,
         array $messages = [],
@@ -138,6 +134,20 @@ class WebPlatform implements PlatformInterface
         return new SseResponse($status, $headers, $body, $protocol);
     }
 
+    public function streamResponse(string $template, array $signals = [], int $status = 200, array $headers = []): SseResponse
+    {
+        $response = new SseResponse($status, $headers);
+        return $response->withEventSource($this->generateStreamResponse($template, $signals));
+    }
+
+    private function generateStreamResponse(string $template, array $signals): \Generator
+    {
+        $renderer = $this->templateRendererResolver->resolve($template);
+        $html = $renderer->render($template);
+        yield SseEvent::patchElements($html);
+        yield SseEvent::patchSignals($signals);
+    }
+
     private function htmlResponse(
         string $template,
         iterable $data = [],
@@ -146,7 +156,7 @@ class WebPlatform implements PlatformInterface
         array $options = []
     ): ResponseInterface {
         $renderer = $this->templateRendererResolver->resolve($template);
-        $html = $renderer->render($template, $this->normalizeData($data), $options);
+        $html = $renderer->render($template, $data, $options);
         return new HtmlResponse($html, $status, $headers);
     }
 
@@ -154,40 +164,5 @@ class WebPlatform implements PlatformInterface
     {
         return $request->hasHeader('Content-Type')
             && false !== \strpos($request->getHeaderLine('Content-Type'), 'application/json');
-    }
-
-    private function normalizeData(iterable $data): array
-    {
-        $res = [];
-        foreach ($data as $key => $value) {
-            if (\is_array($value)) {
-                $res[$key] = $this->normalizeData($value);
-                continue;
-            }
-
-            if ($value instanceof Content) {
-                $res[$key] = $value->toArray();
-                continue;
-            }
-
-            if ($value instanceof Collection) {
-                $collection = [];
-                foreach ($value as $row) {
-                    if (\is_array($row)) {
-                        $collection[] = $this->normalizeData($row);
-                    }
-
-                    if ($row instanceof Content) {
-                        $collection[] = $row->toArray();
-                    }
-                }
-                $res[$key] = $collection;
-                continue;
-            }
-
-            $res[$key] = $value;
-        }
-
-        return $res;
     }
 }

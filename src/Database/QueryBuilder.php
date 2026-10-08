@@ -19,6 +19,7 @@ final class QueryBuilder extends DBALQueryBuilder
     public const string WHERE_LT = "lt";
     public const string WHERE_LTE = "lte";
     public const string WHERE_NOT_INARRAY = "notInArray";
+    public const string WHERE_OR = "or";
     public const string WHERE_RAW = "raw";
 
     public function __construct(private readonly Connection $connection)

@@ -18,11 +18,7 @@ final class TemplateRendererResolver implements TemplateRendererResolverInterfac
             throw new \InvalidArgumentException("Template $template not found in config");
         }
 
-        if (! isset($this->config[$template]['filename'])) {
-            throw new \InvalidArgumentException("Template $template filename not found");
-        }
-
-        if (\str_contains($this->config[$template]['filename'], '.twig')) {
+        if (isset($this->config[$template]['filename']) && \str_contains($this->config[$template]['filename'], '.twig')) {
             return $this->container->get(Twig\TwigTemplateRenderer::class);
         }
 

@@ -32,7 +32,6 @@ final class ConfigProvider
         return [
             "factories" => [
                 Handler\AppsHandler::class => Handler\AppsHandlerFactory::class,
-                Middleware\AppMiddleware::class => Middleware\AppMiddlewareFactory::class,
             ],
         ];
     }
@@ -51,11 +50,6 @@ final class ConfigProvider
                     "methods" => ["GET"],
                     "middleware" => Handler\AppsHandler::class,
                 ],
-                "/apps/{app}/{type}" => [
-                    "name" => Handler\AppsHandler::APP_CONTENT_TYPE,
-                    "methods" => ["GET", "POST", "PUT"],
-                    "middleware" => Handler\AppsHandler::class,
-                ],
             ],
         ];
     }
@@ -69,10 +63,6 @@ final class ConfigProvider
             ],
             Handler\AppsHandler::APP_DASHBOARD => [
                 "filename" => __DIR__ . "/../../template/apps/app-dashboard.twig.html",
-                "includes" => ["main::layout"],
-            ],
-            Handler\AppsHandler::APP_CONTENT_TYPE => [
-                "filename" => __DIR__ . "/../../template/apps/app-content-type.twig.html",
                 "includes" => ["main::layout"],
             ],
         ];

@@ -22,9 +22,9 @@ class TwigTemplateRenderer implements TemplateRendererInterface
     ) {
     }
 
-    public function render(string $template, iterable $data, array $options = []): string
+    public function render(string $template, iterable $data = [], array $options = []): string
     {
-        $loaderData = ['__template' => $this->getTemplateContents($template)];
+        $loaderData = [$template => $this->getTemplateContents($template)];
         foreach ($this->resolveTemplateIncludes($template) as $k) {
             $loaderData[$k] = $this->getTemplateContents($k);
         }
@@ -46,7 +46,7 @@ class TwigTemplateRenderer implements TemplateRendererInterface
         }
 
         // render the template
-        return $twig->render('__template', $data);
+        return $twig->render($template, $data);
     }
 
     private function getTemplateContents(string $templateIdentifier): string
@@ -61,27 +61,7 @@ class TwigTemplateRenderer implements TemplateRendererInterface
         $filesystem = new Filesystem(new LocalFilesystemAdapter($dir, lazyRootCreation: true));
 
         // read the file
-        $template = $filesystem->read($filename);
-        if (! $template) {
-            throw new \RuntimeException(\sprintf(
-                "Template file %s not found",
-                $templateFileName
-            ));
-        }
-
-        return $this->parseResource($templateFileName, $template);
-    }
-
-    private function parseResource(string $resourceName, string $contents): string
-    {
-        if (false !== \mb_strpos($resourceName, '.twig')) {
-            return $contents;
-        }
-
-        throw new \RuntimeException(\sprintf(
-            "Could not parse resource %s",
-            $resourceName
-        ));
+        return $filesystem->read($filename);
     }
 
     private function resolveTemplateIncludes(string $templateName): array

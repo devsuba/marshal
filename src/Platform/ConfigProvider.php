@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Marshal\Platform;
 
+use Marshal\Database\Schema\Content;
+use Marshal\Platform\Web\Page\Page;
+
 final class ConfigProvider
 {
     public function __invoke(): array
@@ -11,6 +14,7 @@ final class ConfigProvider
         return [
             "dependencies" => $this->getDependencies(),
             "events" => $this->getEventsConfig(),
+            "schema" => $this->getSchemaConfig(),
             "twig" => $this->getTwigConfig(),
         ];
     }
@@ -20,8 +24,8 @@ final class ConfigProvider
         return [
             "factories" => [
                 API\APIPlatform::class                                          => API\APIPlatformFactory::class,
-                Middleware\DetectPlatformMiddleware::class                      => Middleware\DetectPlatformMiddlewareFactory::class,
-                Middleware\NotFoundResponseMiddleware::class                    => Middleware\NotFoundResponseMiddlewareFactory::class,
+                DetectPlatformMiddleware::class                                 => DetectPlatformMiddlewareFactory::class,
+                Web\Page\PageMiddleware::class                                  => \Laminas\ServiceManager\Factory\InvokableFactory::class,
                 Web\WebPlatform::class                                          => Web\WebPlatformFactory::class,
                 Web\TemplateRenderer\TemplateRendererResolverInterface::class   => Web\TemplateRenderer\TempateRendererResolverFactory::class,
                 Web\TemplateRenderer\Twig\RuntimeLoader::class                  => Web\TemplateRenderer\Twig\RuntimeLoaderFactory::class,
@@ -34,6 +38,34 @@ final class ConfigProvider
     {
         return [
             'listeners' => [],
+        ];
+    }
+
+    private function getSchemaConfig(): array
+    {
+        return [
+            "properties" => [
+                Page::BODY => [],
+                Page::LAYOUT => [],
+                Page::META => [],
+                Page::TITLE => [],
+            ],
+            "types" => [
+                Web\Page\Page::class => [
+                    "properties" => [
+                        Content::ID,
+                        Page::BODY,
+                        Page::LAYOUT,
+                        Page::META,
+                        Page::TITLE,
+                        Content::DESCRIPTION,
+                        Content::IMAGE,
+                        Content::TAG,
+                        Content::CREATED_AT,
+                        Content::UPDATED_AT,
+                    ],
+                ],
+            ]
         ];
     }
 

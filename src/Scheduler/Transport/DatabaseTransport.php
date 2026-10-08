@@ -6,19 +6,19 @@ namespace Marshal\Scheduler\Transport;
 
 use Marshal\Database\Query\Create;
 use Marshal\Database\Query\Select;
-use Marshal\Scheduler\ScheduledTask;
 use Marshal\Scheduler\TransportInterface;
 use Marshal\Utils\Logger\LoggerManager;
+use Marshal\Scheduler\Task;
 
 final class DatabaseTransport implements TransportInterface
 {
     public function getDue(): array|\Traversable
     {
-        return Select::from(ScheduledTask::class)
+        return Select::from(Task::class)
             ->fetchAllAssociative();
     }
 
-    public function schedule(ScheduledTask $task): bool
+    public function schedule(Task $task): bool
     {
         // @todo apply checks whether task should be saved
 

@@ -20,3 +20,4 @@ local.php
 
 # module not ready
 Auth/
+Content/

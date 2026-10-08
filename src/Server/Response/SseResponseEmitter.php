@@ -86,7 +86,7 @@ final class SseResponseEmitter implements EmitterInterface
     {
         $stream = $response->getBody();
  
-        if (! $stream instanceof SseStream) {
+        // if (! $stream instanceof SseStream) {
             // Body was replaced with a non-SseStream — we cannot flush.
             // Fall back to plain writes without per-event flushing.
             foreach ($response->getEvents() as $event) {
@@ -96,7 +96,7 @@ final class SseResponseEmitter implements EmitterInterface
                 $stream->write($event->toString());
             }
             return;
-        }
+        // }
  
         foreach ($response->getEvents() as $event) {
             if (connection_aborted()) {

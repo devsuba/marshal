@@ -7,5 +7,5 @@ namespace Marshal\Scheduler;
 interface TransportInterface
 {
     public function getDue(): array|\Traversable;
-    public function schedule(ScheduledTask $task): bool;
+    public function schedule(Task $task): bool;
 }

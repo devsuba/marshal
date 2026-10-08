@@ -1,0 +1,16 @@
+[Unit]
+Description=Marshal Python Web Service
+After=network.target
+
+[Service]
+Type=simple
+User=ketedrum
+Group=ketedrum
+WorkingDirectory=/home/ketedrum/projects/marshal/packages/marshal/src/Utils/Python
+Environment="PATH=/home/ketedrum/projects/marshal/packages/marshal/src/Utils/Python/venv/bin"
+ExecStart=/home/ketedrum/projects/marshal/packages/marshal/src/Utils/Python/venv/bin/python3 run.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

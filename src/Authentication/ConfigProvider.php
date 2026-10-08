@@ -175,7 +175,7 @@ final class ConfigProvider
     {
         return [
             Handler\AuthenticationHandler::TEMPLATE_LOGIN_PAGE => [
-                "filename" => '/main/user/login.twig.html',
+                "filename" => __DIR__ . '/../../template/user/login.twig.html',
             ],
             "marshal::profile-dashboard" => [
                 "filename" => "/main/profile/dashboard.twig.html",

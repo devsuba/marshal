@@ -1,0 +1,21 @@
+{% extends "main::layout" %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb breadcrumb-arrow">
+    <li class="breadcrumb-item"><a href="{{ path('marshal::home') }}">Home</a></li>
+    <li class="breadcrumb-item breadcrumb-current" aria-current="page">Reports</li>
+</ol>
+{% endblock %}
+
+{% block main %}
+<main class="container-lg">
+    <div class="section">
+        <h1>Reports</h1>
+        {% for schema, schemadata in reports %}
+        {% for tag, reportDetails in schemadata %}
+        <a href="{{ path('marshal::single-report', {schema: schema, report: tag}) }}">{{ reportDetails.label }}</a>
+        {% endfor %}
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}

@@ -29,49 +29,59 @@
     </head>
     {% block body %}
     <body>
-        {% block header %}
-        <nav class="menu">
-            <div class="container-lg flex justify-center items-end pbe-1 h-full gap-x-3">
-                <a href="{{ path('marshal::home') }}" class="flex flex-col flex-center">
-                    <i class="fa-regular fa-home"></i>
-                    <span>Home</span>
-                </a>
-                <a href="{{ path('marshal::apps-dashboard') }}" class="flex flex-col flex-center">
-                    <i class="fa-solid fa-app-store"></i>
-                    <span>Apps</span>
-                </a>
-                <a href="{{ path('marshal::search') }}" class="flex flex-col flex-center">
-                    <i class="fa-solid fa-search"></i>
-                    <span>Search</span>
-                </a>
-                <a href="{{ path('marshal::reports-dashboard') }}" class="flex flex-col flex-center">
-                    <i class="fa-solid fa-file-excel"></i>
-                    <span>Reports</span>
-                </a>
-                <a href="{{ path('marshal::forms-index') }}" class="flex flex-col flex-center">
-                    <i class="fa-brands fa-wpforms"></i>
-                    <span>Forms</span>
-                </a>
-                <a href="{{ path('marshal::apps-dashboard') }}" class="flex flex-col flex-center">
-                    <i class="fa-solid fa-file-import"></i>
-                    <span>Import</span>
-                </a>
-                <a href="{{ path('marshal::tasks-dashboard') }}" class="flex flex-col flex-center">
-                    <i class="fa-solid fa-tasks"></i>
-                    <span>Tasks</span>
-                </a>
-                <a href="{{ path('marshal::system-page') }}" class="flex flex-col flex-center">
-                    <i class="fa-solid fa-cog"></i>
-                    <span>System</span>
-                </a>
+    	<nav style="display:none;">
+            <div class="flex flex-col h-full">
+                <div class="flex flex-col pbs-5 gap-y-5">
+                    <a href="{{ path('marshal::home') }}" class="flex flex-col flex-center">
+                        <i class="fa-regular fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="{{ path('marshal::search') }}" class="flex flex-col flex-center">
+                        <i class="fa-solid fa-search"></i>
+                        <span>Search</span>
+                    </a>
+                    <a href="{{ path('marshal::content-dashboard') }}" class="flex flex-col flex-center">
+                        <i class="fa-solid fa-database"></i>
+                        <span>Content</span>
+                    </a>
+                    <a href="{{ path('marshal::search') }}" class="flex flex-col flex-center">
+                        <i class="fa-solid fa-pager"></i>
+                        <span>Pages</span>
+                    </a>
+                    <a href="{{ path('marshal::reports-dashboard') }}" class="flex flex-col flex-center">
+                        <i class="fa-solid fa-file-excel"></i>
+                        <span>Reports</span>
+                    </a>
+                    <a href="{{ path('marshal::forms-index') }}" class="flex flex-col flex-center">
+                        <i class="fa-brands fa-wpforms"></i>
+                        <span>Forms</span>
+                    </a>
+                    <a href="{{ path('marshal::apps-dashboard') }}" class="flex flex-col flex-center">
+                        <i class="fa-solid fa-file-import"></i>
+                        <span>Import</span>
+                    </a>
+                    <a href="{{ path('marshal::apps-dashboard') }}" class="flex flex-col flex-center">
+                        <i class="fa-solid fa-app-store"></i>
+                        <span>Apps</span>
+                    </a>
+                    <a href="{{ path('marshal::tasks-dashboard') }}" class="flex flex-col flex-center">
+                        <i class="fa-solid fa-tasks"></i>
+                        <span>Tasks</span>
+                    </a>
+                    <a href="{{ path('marshal::system-page') }}" class="flex flex-col flex-center">
+                        <i class="fa-solid fa-cog"></i>
+                        <span>System</span>
+                    </a>
+                </div>
             </div>
         </nav>
-        {% endblock %}
-        <nav class="container-lg breadcrumb-container" aria-label="Breadcrumb">
-	        {% block breadcrumb %}
-	        {% endblock %}
-        </nav>
-        {% block main %}{% endblock %}
+        <main>
+            <nav class="container-lg breadcrumb-container items-center" aria-label="Breadcrumb">
+                {% block breadcrumb %}
+                {% endblock %}
+            </nav>
+            {% block main %}{% endblock %}
+        </main>
         <script src="{{ static('js/htmx.min.js' )}}"></script>
         <script src="{{ static('js/sorttable.js' )}}"></script>
         <script src="{{ static('js/tabs.js') }}"></script>

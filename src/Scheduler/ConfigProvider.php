@@ -45,20 +45,20 @@ final class ConfigProvider
     {
         return [
             "properties" => [
-                ScheduledTask::EVENT_NAME => [
+                Task::EVENT_NAME => [
                     "label" => "Event Name",
                     "description" => "Event name",
                     "name" => "event_name",
                     "type" => "string",
                     "length" => 255,
                 ],
-                ScheduledTask::EVENT_PARAMS => [
+                Task::EVENT_PARAMS => [
                     "label" => "Event Params",
                     "description" => "Event params",
                     "name" => "event_params",
                     "type" => "json",
                 ],
-                ScheduledTask::EVENT_STATUS => [
+                Task::EVENT_STATUS => [
                     "label" => "Flag",
                     "description" => "Flag property",
                     "name" => "event_status",
@@ -74,7 +74,7 @@ final class ConfigProvider
                         ],
                     ],
                 ],
-                ScheduledTask::TIMEOUT => [
+                Task::TIMEOUT => [
                     "label" => "Timeout",
                     "description" => "Task timeout in seconds",
                     "name" => "timeout",
@@ -85,21 +85,21 @@ final class ConfigProvider
                 ],
             ],
             "types" => [
-                ScheduledTask::class => [
+                Task::class => [
                     "database" => "marshal::scheduler",
                     "description" => "A scheduled task",
-                    "name" => "Scheduled Task",
+                    "name" => "Task",
                     "properties" => [
                         Content::ID,
                         Content::TAG,
-                        ScheduledTask::EVENT_NAME,
-                        ScheduledTask::EVENT_PARAMS,
-                        ScheduledTask::EVENT_STATUS,
-                        ScheduledTask::TIMEOUT,
+                        Task::EVENT_NAME,
+                        Task::EVENT_PARAMS,
+                        Task::EVENT_STATUS,
+                        Task::TIMEOUT,
                         Content::CREATED_AT,
                         Content::UPDATED_AT,
                     ],
-                    "table" => "scheduled_task",
+                    "table" => "task",
                 ],
             ],
         ];

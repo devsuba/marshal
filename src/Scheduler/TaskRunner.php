@@ -17,7 +17,7 @@ final class TaskRunner
     {
         $due = $this->transport->getDue();
         foreach ($due as $task) {
-            \assert($task instanceof ScheduledTask);
+            \assert($task instanceof Task);
 
             $event = new RunTaskEvent($task->getEventName(), $task->getEventParams());
             $this->eventDispatcher->dispatch($event);

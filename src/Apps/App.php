@@ -6,7 +6,7 @@ namespace Marshal\Apps;
 
 final class App
 {
-    public function __construct(private string $identifier, private array $config)
+    public function __construct(private array $config)
     {
     }
 

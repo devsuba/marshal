@@ -4,6 +4,7 @@ declare(strict_types= 1);
 
 namespace Marshal\Platform;
 
+use Laminas\Diactoros\Response\JsonResponse;
 use Marshal\Server\Response\SseResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -61,5 +62,12 @@ interface PlatformInterface
         array $headers = [],
         ?StreamInterface $body = null,
         string $protocol = '1.1'
+    ): SseResponse;
+
+    public function streamResponse(
+        string $template,
+        array $signals = [],
+        int $status = 200,
+        array $headers = []
     ): SseResponse;
 }

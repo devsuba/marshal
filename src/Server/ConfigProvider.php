@@ -11,6 +11,7 @@ final class ConfigProvider
         return [
             'dependencies' => $this->getDependencies(),
             "events" => $this->getEventsConfig(),
+            "layouts" => $this->getTemplateLayouts(),
             "middleware_pipeline" => $this->getMiddlewarePipeline(),
             "navigation" => $this->getRoutesConfig(),
             "templates" => $this->getTemplates(),
@@ -45,14 +46,14 @@ final class ConfigProvider
     private function getMiddlewarePipeline(): array
     {
         return [
-            \Marshal\Platform\Middleware\DetectPlatformMiddleware::class,
+            \Marshal\Platform\DetectPlatformMiddleware::class,
             \PSR7Sessions\Storageless\Http\SessionMiddleware::class,
             \Marshal\Authentication\AuthenticationMiddleware::class,
             \Mezzio\Router\Middleware\RouteMiddleware::class,
             \Mezzio\Router\Middleware\MethodNotAllowedMiddleware::class,
-            \Marshal\Apps\Middleware\AppMiddleware::class,
             \Mezzio\Router\Middleware\DispatchMiddleware::class,
-            \Marshal\Platform\Middleware\NotFoundResponseMiddleware::class,
+            \Marshal\Platform\Web\Page\PageMiddleware::class,
+            Handler\PageNotFoundHandler::class,
         ];
     }
 
@@ -81,6 +82,19 @@ final class ConfigProvider
             Handler\HomeHandler::TEMPLATE_HOME => [
                 "filename" => __DIR__ . "/../../template/main/home.twig.html",
                 "includes" => ["main::layout"],
+            ],
+            "marshal::home-alternate" => [
+                "layout" => "marshal::main",
+            ],
+        ];
+    }
+
+    private function getTemplateLayouts(): array
+    {
+        return [
+            "marshal::empty" => [],
+            "marshal::main" => [
+                "filename" => __DIR__ . "/../../template/main/home.html",
             ],
         ];
     }

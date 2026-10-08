@@ -17,5 +17,6 @@ trait WhereConstants
     final public const string WHERE_LT = QueryBuilder::WHERE_LT;
     final public const string WHERE_LTE = QueryBuilder::WHERE_LTE;
     final public const string WHERE_NOT_INARRAY = QueryBuilder::WHERE_NOT_INARRAY;
+    final public const string WHERE_OR = QueryBuilder::WHERE_OR;
     final public const string WHERE_RAW = QueryBuilder::WHERE_RAW;
 }

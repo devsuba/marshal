@@ -216,8 +216,9 @@ final class Property
         }
     }
 
-    public function setValue(mixed $value): void
+    public function setValue(mixed $value): static
     {
         $this->value = $value;
+        return $this;
     }
 }

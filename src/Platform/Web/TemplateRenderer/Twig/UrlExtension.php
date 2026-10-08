@@ -19,6 +19,15 @@ final class UrlExtension
     ) {
     }
 
+    public function api(
+        string $schema,
+        array $where = [],
+        ?string $groupBy = null,
+        ?string $orderBy = null
+    ): string {
+        return "";
+    }
+
     /**
      * Render media url, optionally versioned
      *

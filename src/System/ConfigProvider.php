@@ -41,7 +41,7 @@ final class ConfigProvider
     {
         return [
             Handler\SystemHandler::SYSTEM_PAGE => [
-                "filename" => "/main/system/dashboard.twig.html",
+                "filename" => __DIR__ . "/../../template/system/dashboard.twig.html",
                 "includes" => ["main::layout"],
             ],
         ];

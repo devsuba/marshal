@@ -14,21 +14,6 @@ trait Properties
     private array $excludeProperties = [];
     private array $properties = [];
 
-    public function addProperty(string $identifier, string $property): static
-    {
-        if (! \array_key_exists($identifier, $this->properties)) {
-            $this->properties[$identifier] = [$property];
-            return $this;
-        }
-
-        if (isset($this->properties[$identifier][$property])) {
-            return $this;
-        }
-
-        $this->properties[$identifier][] = $property;
-        return $this;
-    }
-
     public function distinct(string $identifier, string $property): static
     {
         $this->distinct = [$identifier, $property];
@@ -60,14 +45,10 @@ trait Properties
         }
 
         [$typeIdentifier, $propertyIdentifier] = $this->distinct;
-        foreach ($this->distinct as $identifier => $properties) {
-
-        }
-
         if ($content->getSchemaIdentifier() === $typeIdentifier || $content->getTable() === $typeIdentifier) {
             if (! $content->hasProperty($propertyIdentifier)) {
                 throw new \InvalidArgumentException(\sprintf(
-                    "Invalid distinct query: Property %s not found on type %s",
+                    "Invalid distinct query: Property %s not found on content %s",
                     $propertyIdentifier, $typeIdentifier
                 ));
             }
@@ -84,20 +65,15 @@ trait Properties
 
         }
 
-        if ($content->getSchemaIdentifier() === $identifier || $content->getTable() === $identifier) {
-            $this->applyTypeDistinctProperties($queryBuilder, $content, $properties);
-            return;
-        }
-
         throw new \InvalidArgumentException(\sprintf(
-            "Invalid distinct query. Unknown distinct identifier %s",
-            $typeIdentifier
+            "Invalid distinct query. Unknown distinct identifier %s on content %s",
+            $typeIdentifier, $content->getSchemaIdentifier()
         ));
     }
 
-    protected function applyProperties(QueryBuilder $queryBuilder, Content $content, ?string $alias = null): void
+    private function applyProperties(QueryBuilder $queryBuilder, Content $content, ?string $alias = null): void
     {
-        $delta = empty($this->properties)
+        $delta = empty($this->properties) && empty($this->distinct)
             ? [$content->getSchemaIdentifier() => \array_map(
                 static fn (Property $property): string => $property->getName(),
                 $content->getProperties()
@@ -132,17 +108,18 @@ trait Properties
             }
 
             throw new \InvalidArgumentException(\sprintf(
-                "Invalid query. Unknown properties identifier %s",
-                $identifier
+                "Invalid query. Unknown properties identifier %s on content %s",
+                $identifier, $content->getSchemaIdentifier()
             ));
         }
     }
 
-    protected function applyTypeDistinctProperty(QueryBuilder $queryBuilder, Content $content, string $identifier, ?string $alias = null): void
+    private function applyTypeDistinctProperty(QueryBuilder $queryBuilder, Content $content, string $identifier, ?string $alias = null): void
     {
         if (! $content->hasProperty($identifier) && null === $alias) {
             throw new \InvalidArgumentException(\sprintf(
                 "Distinct property %s not found on type %s",
+                $identifier, $content->getSchemaIdentifier()
             ));
         }
 
@@ -155,7 +132,7 @@ trait Properties
         $this->excludeProperty($content->getSchemaIdentifier(), $identifier);
     }
 
-    protected function applyTypeProperties(QueryBuilder $queryBuilder, Content $content, array $properties, ?string $alias = null): void
+    private function applyTypeProperties(QueryBuilder $queryBuilder, Content $content, array $properties, ?string $alias = null): void
     {
         foreach ($properties as $identifier) {
             if (! $content->hasProperty($identifier)) {

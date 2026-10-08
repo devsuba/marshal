@@ -52,14 +52,15 @@ final class ConfigProvider
                 Command\Migration\RollbackMigrationCommand::class   => Command\Migration\RollbackMigrationCommandFactory::class,
                 Command\Migration\RunMigrationCommand::class        => Command\Migration\RunMigrationCommandFactory::class,
                 Command\Migration\SetupMigrationsCommand::class     => Command\Migration\SetupMigrationsCommandFactory::class,
-                Handler\ContentDashboard::class                     => Handler\ContentDashboardFactory::class,
-                Handler\ContentSchemaHandler::class                 => Handler\ContentSchemaHandlerFactory::class,
-                Handler\ContentSchemaTypeHandler::class             => Handler\ContentSchemaTypeHandlerFactory::class,
+                Handler\ContentHandler::class                       => Handler\ContentHandlerFactory::class,
                 Handler\ReportsHandler::class                       => Handler\ReportsHandlerFactory::class,
             ],
             "invokables" => [
                 Command\Migration\DescribeMigrationCommand::class => Command\Migration\DescribeMigrationCommand::class,
                 Command\Migration\MigrationStatusCommand::class => Command\Migration\MigrationStatusCommand::class,
+                Handler\ContentDashboardHandler::class => Handler\ContentDashboardHandler::class,
+                Handler\ContentSchemaHandler::class => Handler\ContentSchemaHandler::class,
+                Handler\ContentSchemaTypeHandler::class => Handler\ContentSchemaTypeHandler::class,
                 Listener\MigrationEventsListener::class => Listener\MigrationEventsListener::class,
             ],
         ];
@@ -96,15 +97,17 @@ final class ConfigProvider
     {
         return [
             "where" => [
-                QueryBuilder::WHERE_EQ => Query\Operator\Eq::class,
-                QueryBuilder::WHERE_GT => Query\Operator\Gt::class,
-                QueryBuilder::WHERE_GTE => Query\Operator\Gte::class,
-                QueryBuilder::WHERE_INARRAY => Query\Operator\InArray::class,
-                QueryBuilder::WHERE_IN_QUERY => Query\Operator\InQuery::class,
-                QueryBuilder::WHERE_ISNULL => Query\Operator\IsNull::class,
-                QueryBuilder::WHERE_LT => Query\Operator\Lt::class,
-                QueryBuilder::WHERE_LTE => Query\Operator\Lte::class,
-                QueryBuilder::WHERE_NOT_INARRAY => Query\Operator\NotInArray::class,
+                QueryBuilder::WHERE_EQ => Query\Expression\Eq::class,
+                QueryBuilder::WHERE_GT => Query\Expression\Gt::class,
+                QueryBuilder::WHERE_GTE => Query\Expression\Gte::class,
+                QueryBuilder::WHERE_INARRAY => Query\Expression\InArray::class,
+                QueryBuilder::WHERE_IN_QUERY => Query\Expression\InQuery::class,
+                QueryBuilder::WHERE_ISNULL => Query\Expression\IsNull::class,
+                QueryBuilder::WHERE_LT => Query\Expression\Lt::class,
+                QueryBuilder::WHERE_LTE => Query\Expression\Lte::class,
+                QueryBuilder::WHERE_NOT_INARRAY => Query\Expression\NotInArray::class,
+                QueryBuilder::WHERE_OR => Query\Expression\Either::class,
+                QueryBuilder::WHERE_RAW => Query\Expression\Raw::class,
             ],
         ];
     }
@@ -264,6 +267,27 @@ final class ConfigProvider
     {
         return [
             "paths" => [
+                "/content" => [
+                    "name" => Handler\ContentDashboardHandler::ROUTE_CONTENT_DASHBOARD,
+                    "methods" => ["GET"],
+                    "middleware" => Handler\ContentDashboardHandler::class,
+                ],
+                "/content/{schema}" => [
+                    "name" => Handler\ContentHandler::CONTENT_SCHEMA,
+                    "methods" => ["GET"],
+                    "middleware" => Handler\ContentHandler::class,
+                    "options" => [
+                        "template" => "marshal::content-schema",
+                    ],
+                ],
+                "/content/{schema}/{type}" => [
+                    "name" => Handler\ContentHandler::CONTENT_SCHEMA_TYPE,
+                    "methods" => ["GET", "POST"],
+                    "middleware" => Handler\ContentHandler::class,
+                    "options" => [
+                        "template" => "marshal::content-schema-type",
+                    ],
+                ],
                 "/reports" => [
                     "name" => Handler\ReportsHandler::REPORTS_DASHBOARD,
                     "methods" => ["GET"],
@@ -281,8 +305,20 @@ final class ConfigProvider
     private function getTemplates(): array
     {
         return [
+            Handler\ContentDashboardHandler::ROUTE_CONTENT_DASHBOARD => [
+                "filename" => __DIR__ . "/../../template/content/dashboard.twig.html",
+                "includes" => ["main::layout"],
+            ],
+            "marshal::content-schema" => [
+                "filename" => __DIR__ . "/../../template/content/schema.twig.html",
+                "includes" => ["main::layout"],
+            ],
+            "marshal::content-schema-type" => [
+                "filename" => __DIR__ . "/../../template/content/schema-type.twig.html",
+                "includes" => ["main::layout"],
+            ],
             Handler\ReportsHandler::REPORTS_DASHBOARD => [
-                "filename" => __DIR__ . "/../../template/content/reports-dashboard.twig.html",
+                "filename" => __DIR__ . "/../../template/reports/dashboard.twig.html",
                 "includes" => ["main::layout"],
             ],
         ];
